@@ -1,0 +1,11 @@
+Aggregate  (cost=830.00..830.01 rows=1 width=8)
+           (actual time=8.741..8.743 rows=1 loops=1)
+  ->  Bitmap Heap Scan on trades_2019_08
+        (cost=40.00..815.00 rows=6000 width=8)
+        (actual time=1.803..8.291 rows=5982 loops=1)
+        Recheck Cond: (trade_timestamp >= (CURRENT_DATE - '30 days'::interval))
+        ->  Bitmap Index Scan on brin_trades_timestamp
+              (cost=0.00..38.50 rows=6000 width=0)
+              (actual time=1.502..1.503 rows=5982 loops=1)
+Planning Time: 0.310 ms
+Execution Time: 8.801 ms

@@ -8,6 +8,13 @@ GROUP BY EXCHANGE, SYMBOL
 ORDER BY TOTAL_OI_CHANGE DESC
 LIMIT 10;
 
+---Cross-exchange comparison: Avg settle_pr for gold futures (MCX) vs. equity index futures (NSE).
+SELECT
+    EXCHANGE,
+    AVG(SETTLE_PR) AS AVG_SETTLE_PRICE
+FROM dbo.TRADES
+WHERE INSTRUMENT = 'FUTIDX'
+GROUP BY EXCHANGE;
 
 --Option Chain Summary (Expiry + Strike)
 SELECT

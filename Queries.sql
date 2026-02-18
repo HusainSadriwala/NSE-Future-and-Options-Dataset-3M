@@ -1,0 +1,35 @@
+--Top 10 Symbols by Open Interest (OI) Change Across Exchanges
+SELECT
+    EXCHANGE,
+    SYMBOL,
+    SUM(CHG_IN_OI) AS TOTAL_OI_CHANGE
+FROM dbo.TRADES
+GROUP BY EXCHANGE, SYMBOL
+ORDER BY TOTAL_OI_CHANGE DESC
+LIMIT 10;
+
+
+--Option Chain Summary (Expiry + Strike)
+SELECT
+    EXPIRY_DT,
+    STRIKE_PR,
+    SUM(CONTRACTS) AS IMPLIED_VOLUME
+FROM dbo.TRADES
+GROUP BY EXPIRY_DT, STRIKE_PR
+ORDER BY EXPIRY_DT, STRIKE_PR;
+
+--Performance-Optimized: Max Volume in Last 30 Days
+SELECT SYMBOL, TRADE_DATE, CONTRACTS
+FROM (
+    SELECT
+        SYMBOL,
+        TRADE_DATE,
+        CONTRACTS,
+        ROW_NUMBER() OVER (
+            PARTITION BY SYMBOL
+            ORDER BY CONTRACTS DESC
+        ) AS RN
+    FROM dbo.TRADES
+    WHERE TRADE_DATE >= CURRENT_DATE - INTERVAL '30 days'
+) X
+WHERE RN = 1;
